@@ -1,0 +1,18 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Greeting Page</title>
+</head>
+<body>
+    <h1>Greeting App</h1>
+    <input type="text" id="name-input" placeholder="Enter your name" />
+    <button id="submit-btn" >Submit</button>
+    <p id="greeting-output">Your greeting will appear here.</p>
+
+    <!-- Link to the JavaScript file -->
+    <script src="{% static 'js/greet.js' %}"></script>
+</body>
+</html>
