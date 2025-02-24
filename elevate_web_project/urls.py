@@ -15,12 +15,13 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 from my_app.views import default_greet #import the default_greet view
 from my_app.views import greet
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', default_greet, name='home'), #set the homepage route to the default_greet
+    path('', include('my_app.urls')),
+    #path('', default_greet, name='home'), #set the homepage route to the default_greet
     path('greet/', greet, name='greet'),
 ]

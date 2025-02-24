@@ -1,0 +1,12 @@
+{% extends 'my_app/base.html' %}
+
+{% block content %}
+    <h1>Dashboard</h1>
+    <ul>
+        {% for workout in workouts %}
+            <li>{{ workout.exercise }} - {{ workout.duration }} mins</li>
+        {% empty %}
+            <li>No workouts yet!</li>
+        {% endfor %}
+    </ul>
+{% endblock %}

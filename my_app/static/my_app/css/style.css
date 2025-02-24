@@ -1,0 +1,74 @@
+/* Reset default margins and set a modern font */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Roboto', sans-serif;
+    background-color: #1a1a1a; /* Dark gray background like Whoop */
+    color: #ffffff; /* White text for contrast */
+}
+
+/* Sidebar (Menu Bar) */
+.sidebar {
+    width: 200px;
+    height: 100vh; /* Full height */
+    background-color: #000000; /* Black like Whoop’s dark theme */
+    position: fixed; /* Stays on the left */
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.sidebar h2 {
+    color: #ffffff; /* White title */
+    font-size: 24px;
+    margin: 0 0 30px;
+    text-align: center;
+}
+
+.sidebar ul {
+    list-style: none;
+    padding: 0;
+}
+
+.sidebar li {
+    margin: 15px 0;
+}
+
+.sidebar a {
+    color: #b3b3b3; /* Light gray for links */
+    text-decoration: none;
+    font-size: 18px;
+    display: block;
+    padding: 10px;
+    transition: all 0.3s ease; /* Smooth hover effect */
+}
+
+.sidebar a:hover {
+    color: #00d4b5; /* teal on hover */
+    background-color: #333333; /* Slightly lighter gray */
+}
+
+/* Content Area */
+.content {
+    margin-left: 200px; /* Space for the sidebar */
+    padding: 30px;
+    min-height: 100vh; /* Full height */
+}
+
+.content h1 {
+    color: #ffffff; /* White headings */
+    font-size: 32px;
+    margin-bottom: 20px;
+}
+
+.content ul {
+    list-style: none;
+    padding: 0;
+}
+
+.content li {
+    background-color: #262626; /* Dark gray for list items */
+    padding: 15px;
+    margin: 10px 0;
+    border-radius: 5px; /* Rounded corners */
+    font-size: 16px;
+}
