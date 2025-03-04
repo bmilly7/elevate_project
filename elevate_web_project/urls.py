@@ -21,6 +21,7 @@ from my_app.views import greet
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('accounts/', include('django.contrib.auth.urls')), #built in auth urls
     path('', include('my_app.urls')),
     #path('', default_greet, name='home'), #set the homepage route to the default_greet
     path('greet/', greet, name='greet'),

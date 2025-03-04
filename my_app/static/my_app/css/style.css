@@ -72,3 +72,81 @@ body {
     border-radius: 5px; /* Rounded corners */
     font-size: 16px;
 }
+
+
+/* Form Styling */
+form {
+    background-color: #262626; /* Dark gray background */
+    padding: 20px;
+    border-radius: 8px; /* Slightly rounded corners */
+    width: 100%;
+    max-width: 400px; /* Keeps it from getting too wide */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3); /* Subtle shadow for depth */
+    margin-bottom: 20px;
+}
+
+/* Form Fields */
+form p {
+    margin: 15px 0; /* Space between fields */
+}
+
+form label {
+    color: #b3b3b3; /* Light gray labels */
+    display: block;
+    margin-bottom: 5px;
+}
+
+form input[type="text"],
+form input[type="password"] {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: #333333; /* Slightly lighter gray */
+    color: #ffffff; /* White text */
+    font-size: 16px;
+    box-sizing: border-box;
+}
+
+/* Button */
+button {
+    background-color: #00d4b5; /* Whoop teal */
+    color: #ffffff;
+    padding: 12px;
+    border: none;
+    border-radius: 5px;
+    width: 100%;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #00b399; /* Darker teal on hover */
+}
+
+/* Links */
+a {
+    color: #00d4b5; /* Teal for links */
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+/* Center the Form */
+.content {
+    margin-left: 200px;
+    padding: 30px;
+    min-height: 100vh;
+    display: flex; /* Add flexbox to center content */
+    flex-direction: column;
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+}
+
+.content p {
+    color: #b3b3b3; /* Light gray text */
+    margin: 0; /* Reset default margin */
+}
