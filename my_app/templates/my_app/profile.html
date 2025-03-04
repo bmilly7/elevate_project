@@ -1,0 +1,17 @@
+{% extends 'my_app/base.html' %}
+
+{% block content %}
+    <h1>Your Profile</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        {% if form.errors %}
+            <p style="color: red;">Please fix the errors below:</p>
+            {{ form.errors }}
+        {% endif %}
+        <button type="submit">Save Changes</button>
+    </form>
+    <script>
+        document.getElementById('id_birthday').type = 'date';
+    </script>
+{% endblock %}

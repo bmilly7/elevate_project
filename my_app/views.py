@@ -1,10 +1,19 @@
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
-from .models import Workout
+from .models import Workout, Profile
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
 from datetime import datetime
+from django.forms import ModelForm
+
+
+class ProfileForm(ModelForm):
+    class Meta:
+        model = Profile
+        fields = ['first_name', 'last_name', 'height', 'weight', 'birthday', 'gender']
+
+
 
 
 
@@ -69,3 +78,23 @@ def signup(request):
     else:
         form = UserCreationForm()
     return render(request, 'my_app/signup.html', {'form': form})
+
+
+
+@login_required
+def profile(request):
+    # Get or create the user's profile
+    profile, created = Profile.objects.get_or_create(user=request.user)
+    print(f"Profile exists: {not created}, Data: {profile.first_name}, {profile.height}")  # Debug
+    if request.method == 'POST':
+        form = ProfileForm(request.POST, instance=profile)
+        print("POST request received")  # Debug
+        if form.is_valid():
+            print("Form is valid, saving:", form.cleaned_data)  # Debug
+            form.save()
+            return redirect('profile')
+        else:
+            print("Form errors:", form.errors)  # Debug
+    else:
+        form = ProfileForm(instance=profile)
+    return render(request, 'my_app/profile.html', {'form': form})
