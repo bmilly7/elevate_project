@@ -10,9 +10,13 @@
     <div class="sidebar">
         <h2>Menu</h2>
         <ul>
-            <li><a href="/">Dashboard</a></li>
+            <li><a href="/">Home</a></li>
+            <li><a href="/dashboard/">Dashboard</a></li>
             <li><a href="/analytics/">Analytics</a></li>
             <li><a href="/goals/">Goals</a></li>
+            {% if user.is_authenticated %}
+            <li class="logout-link"><a href="/accounts/logout/">Log Out</a></li>
+            {% endif %}
         </ul>
     </div>
     <div class="content">

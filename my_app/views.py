@@ -4,10 +4,26 @@ from .models import Workout
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
+from datetime import datetime
 
 
 
 # Create your views here.
+@login_required
+def welcome(request):
+    today = datetime.now().strftime("%B %d, %Y")  # e.g., "March 04, 2025"
+    message = "Keep pushing forward—you've got this!"
+    return render(request, 'my_app/welcome.html', {
+        'username': request.user.username,
+        'today': today,
+        'message': message
+    })
+
+
+
+
+
+
 def default_greet(request):
     return render(request, "greet.html")
 
