@@ -2,11 +2,52 @@
 
 {% block content %}
     <h1>Dashboard</h1>
+    <h2>Search Exercises</h2>
+    <input type="text" id="exercise-search" placeholder="Type an exercise...">
+    <div id="suggestions"></div>
+
+    <h2>Log a Workout</h2>
+    <form method="post" id="workout-form">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Log Workout</button>
+    </form>
+    <h2>Your Recent Workouts</h2>
     <ul>
         {% for workout in workouts %}
-            <li>{{ workout.exercise }} - {{ workout.duration }} mins</li>
+            <li>{{ workout.exercise }} - {{ workout.duration }} mins ({{ workout.date }})</li>
         {% empty %}
             <li>No workouts yet!</li>
         {% endfor %}
     </ul>
+
+    <script>
+        const searchInput = document.getElementById('exercise-search');
+        const suggestionsDiv = document.getElementById('suggestions');
+        const exerciseField = document.getElementById('id_exercise');
+    
+        searchInput.addEventListener('input', function() {
+            const query = this.value;
+            if (query.length > 0) {
+                fetch(`/search-exercises/?q=${query}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        suggestionsDiv.innerHTML = '';
+                        data.exercises.forEach(exercise => {
+                            const div = document.createElement('div');
+                            div.textContent = exercise;
+                            div.style.cursor = 'pointer';
+                            div.onclick = () => {
+                                exerciseField.value = exercise;
+                                suggestionsDiv.innerHTML = '';
+                            };
+                            suggestionsDiv.appendChild(div);
+                        });
+                    })
+                    .catch(error => console.error('Error:', error));
+            } else {
+                suggestionsDiv.innerHTML = '';
+            }
+        });
+    </script> 
 {% endblock %}

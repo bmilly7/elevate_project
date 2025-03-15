@@ -12,6 +12,24 @@ class ProfileForm(ModelForm):
     class Meta:
         model = Profile
         fields = ['first_name', 'last_name', 'height', 'weight', 'birthday', 'gender']
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['birthday'].required = False
+
+
+class WorkoutForm(ModelForm):
+    class Meta:
+        model = Workout
+        fields = ['exercise', 'duration']
+
+
+#static list of exercises
+
+COMMON_EXERCISES = [
+    'Running', 'Push-ups', 'Sit-ups', 'Squats', 'Cycling',
+    'Jumping Jacks', 'Plank', 'Lunges', 'Burpees', 'Yoga',
+    'Swimming', 'Weight Lifting', 'Pull-ups', 'Stretching', 'Rowing'
+]
 
 
 
@@ -53,8 +71,17 @@ def greet(request):
 
 @login_required
 def dashboard(request):
-    workouts = Workout.objects.all()[:5]  # Show last 5 workouts
-    return render(request, 'my_app/dashboard.html', {'workouts': workouts})
+    if request.method == 'POST':
+        form = WorkoutForm(request.POST)
+        if form.is_valid():
+            workout = form.save(commit=False)
+            workout.user = request.user  # Tie to logged-in user
+            workout.save()
+            return redirect('dashboard')
+    else:
+        form = WorkoutForm()
+    workouts = Workout.objects.filter(user=request.user).order_by('-date')[:5]  # Last 5 workouts
+    return render(request, 'my_app/dashboard.html', {'form': form, 'workouts': workouts})
 
 @login_required
 def analytics(request):
@@ -98,3 +125,26 @@ def profile(request):
     else:
         form = ProfileForm(instance=profile)
     return render(request, 'my_app/profile.html', {'form': form})
+
+
+#handle ajax request
+@login_required
+def search_exercises(request):
+    query = request.GET.get('q', '')
+    print("Query:", query)  # Debug what’s being typed
+    # Get user's logged exercises
+    user_exercises = Workout.objects.filter(
+        user=request.user, exercise__icontains=query
+    ).values('exercise').distinct()
+    user_exercise_list = [exercise['exercise'] for exercise in user_exercises]
+    print("User exercises:", user_exercise_list)  # Debug
+    
+    # Filter static exercises
+    static_exercises = [ex for ex in COMMON_EXERCISES if query.lower() in ex.lower()]
+    print("Static exercises:", static_exercises)  # Debug
+    
+    # Combine and remove duplicates, limit to 5
+    combined_exercises = list(dict.fromkeys(user_exercise_list + static_exercises))[:5]
+    print("Combined exercises:", combined_exercises)  # Debug
+    
+    return JsonResponse({'exercises': combined_exercises})   

@@ -163,3 +163,32 @@ a:hover {
     color: #b3b3b3; /* Light gray text */
     margin: 0; /* Reset default margin */
 }
+
+
+
+#exercise-search {
+    width: 100%;
+    max-width: 400px;
+    padding: 10px;
+    background-color: #333333;
+    color: #ffffff;
+    border: none;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+
+#suggestions {
+    max-width: 400px;
+    background-color: #262626;
+    border-radius: 5px;
+}
+
+#suggestions div {
+    padding: 10px;
+    color: #ffffff;
+}
+
+#suggestions div:hover {
+    background-color: #333333;
+    color: #ffffff;
+}
