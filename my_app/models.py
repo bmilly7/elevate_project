@@ -31,3 +31,16 @@ class Profile(models.Model):
 
     def __str__(self):
         return f"{self.user.username}'s Profile"
+
+
+
+
+class Goal(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    description = models.CharField(max_length=200)  # e.g., "Exercise this week"
+    target_minutes = models.IntegerField()  # Goal in minutes
+    start_date = models.DateField(auto_now_add=True)  # When goal is set
+    deadline = models.DateField()  # When it ends
+
+    def __str__(self):
+        return f"{self.description} ({self.target_minutes} mins) by {self.user.username}"

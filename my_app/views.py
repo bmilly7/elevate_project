@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
-from .models import Workout, Profile
+from .models import Workout, Profile, Goal
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
@@ -21,6 +21,13 @@ class WorkoutForm(ModelForm):
     class Meta:
         model = Workout
         fields = ['exercise', 'duration']
+
+
+class GoalForm(ModelForm):  # Should be here, globally defined
+    class Meta:
+        model = Goal
+        fields = ['description', 'target_minutes', 'deadline']
+
 
 
 #static list of exercises
@@ -89,7 +96,47 @@ def analytics(request):
 
 @login_required
 def goals(request):
-    return render(request, 'my_app/goals.html')
+    if request.method == 'POST':
+        form = GoalForm(request.POST)
+        if form.is_valid():
+            goal = form.save(commit=False)
+            goal.user = request.user
+            goal.save()
+            return redirect('goals')
+    else:
+        form = GoalForm()
+    
+    # Get active goals (not past deadline)
+    today = datetime.now().date()
+    active_goals = Goal.objects.filter(user=request.user, deadline__gte=today)
+    
+    # Calculate progress and percentage for each goal
+    for goal in active_goals:
+        workouts = Workout.objects.filter(
+            user=request.user, date__gte=goal.start_date, date__lte=goal.deadline
+        )
+        goal.progress = sum(workout.duration for workout in workouts)
+        # Calculate percentage (0-100), cap at 100%
+        goal.progress_percentage = min(100, (goal.progress / goal.target_minutes * 100) if goal.target_minutes > 0 else 0)
+    
+    # Get profile for extra context
+    profile = Profile.objects.get_or_create(user=request.user)[0]
+    
+    return render(request, 'my_app/goals.html', {
+        'form': form,
+        'goals': active_goals,
+        'profile': profile
+    })
+
+
+
+
+
+
+
+
+
+
 
 
 def signup(request):

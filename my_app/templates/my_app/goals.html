@@ -1,6 +1,40 @@
 {% extends 'my_app/base.html' %}
 
 {% block content %}
-    <h1>Goals</h1>
-    <p>Goals coming soon!</p>
+    <h1>Your Goals</h1>
+    
+    <h2>Set a New Goal</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Set Goal</button>
+    </form>
+    
+    <h2>Active Goals</h2>
+    {% if goals %}
+        <ul>
+        {% for goal in goals %}
+            <li>
+                {{ goal.description }}: {{ goal.progress|default:0 }} / {{ goal.target_minutes }} mins 
+                (Deadline: {{ goal.deadline }})
+                <div style="width: 200px; background: #333333; height: 10px; margin-top: 5px; border-radius: 5px;">
+                    <div style="width: {{ goal.progress_percentage|floatformat:0 }}%; background: #00cc99; height: 10px; border-radius: 5px;"></div>
+                </div>
+                {% if goal.progress >= goal.target_minutes %}
+                    <span style="color: #00cc99;"> - Achieved!</span>
+                {% endif %}
+            </li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>No active goals yet—set one above!</p>
+    {% endif %}
+    
+    <h2>Your Profile Context</h2>
+    <p>Weight: {{ profile.weight|default:"Not set" }} lbs | Height: {{ profile.height|default:"Not set" }} inches</p>
+
+    <script>
+        // Add date picker to deadline field
+        document.getElementById('id_deadline').type = 'date';
+    </script>
 {% endblock %}
