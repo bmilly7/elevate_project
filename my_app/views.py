@@ -43,14 +43,13 @@ COMMON_EXERCISES = [
 
 
 # Create your views here.
+
 @login_required
 def welcome(request):
-    today = datetime.now().strftime("%B %d, %Y")  # e.g., "March 04, 2025"
-    message = "Keep pushing forward—you've got this!"
+    today = datetime.now().strftime("%B %d, %Y")  # e.g., "April 9, 2025"
     return render(request, 'my_app/welcome.html', {
         'username': request.user.username,
-        'today': today,
-        'message': message
+        'today': today
     })
 
 

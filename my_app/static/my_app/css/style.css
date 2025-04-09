@@ -206,3 +206,49 @@ li {
     border-radius: 5px;
     color: #ffffff;
 }
+
+/*styling for the welcome page */
+
+.welcome-container {
+    text-align: center;
+    padding: 50px;
+    color: #ffffff;
+    background-color: #1a1a1a; /* Dark background */
+    min-height: 100vh; /* Full height */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.welcome-image {
+    max-width: 100%;
+    height: auto;
+    margin-bottom: 20px;
+    border-radius: 10px;
+}
+
+h1 {
+    font-size: 2.5em;
+    margin: 20px 0;
+}
+
+p {
+    font-size: 1.2em;
+    color: #b3b3b3;
+}
+
+.btn {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #00cc99; /* Teal accent */
+    color: #ffffff;
+    text-decoration: none;
+    border-radius: 5px;
+    font-size: 1.1em;
+    margin-top: 20px;
+}
+
+.btn:hover {
+    background-color: #009977; /* Darker teal on hover */
+}

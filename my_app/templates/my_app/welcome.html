@@ -1,7 +1,11 @@
 {% extends 'my_app/base.html' %}
+{% load static %}
 
 {% block content %}
-    <h1>Welcome, {{ username }}!</h1>
-    <p>Today is {{ today }}</p>
-    <p>{{ message }}</p>
+    <div class="welcome-container">
+        <h1>Welcome {{ username }}, it’s time to elevate</h1>
+        <img src="{% static 'my_app/images/welcome_image.jpeg' %}" alt="Welcome to Elevate" class="welcome-image">
+        <p>{{ today }}</p>
+        <a href="{% url 'dashboard' %}" class="btn">Go to Dashboard</a>
+    </div>
 {% endblock %}
