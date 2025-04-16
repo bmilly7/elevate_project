@@ -4,8 +4,9 @@ from .models import Workout, Profile, Goal
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
-from datetime import datetime
+from datetime import datetime, timedelta
 from django.forms import ModelForm
+from django.db import models
 
 
 class ProfileForm(ModelForm):
@@ -89,9 +90,61 @@ def dashboard(request):
     workouts = Workout.objects.filter(user=request.user).order_by('-date')[:5]  # Last 5 workouts
     return render(request, 'my_app/dashboard.html', {'form': form, 'workouts': workouts})
 
+
 @login_required
 def analytics(request):
-    return render(request, 'my_app/analytics.html')
+    today = datetime.now().date()
+    
+    # Summary stats
+    workouts = Workout.objects.filter(user=request.user)
+    total_minutes = sum(w.duration for w in workouts)
+    workout_count = workouts.count()
+    avg_duration = total_minutes / workout_count if workout_count > 0 else 0
+    
+    # Daily workout data (last 7 days)
+    week_ago = today - timedelta(days=6)
+    daily_data = []
+    for i in range(7):
+        day = week_ago + timedelta(days=i)
+        day_workouts = workouts.filter(date=day)
+        daily_data.append({
+            'date': day.strftime('%Y-%m-%d'),
+            'minutes': sum(w.duration for w in day_workouts)
+        })
+    
+    # Weekly trends (last 4 weeks)
+    four_weeks_ago = today - timedelta(days=27)
+    weekly_data = []
+    for i in range(4):
+        week_start = four_weeks_ago + timedelta(days=i*7)
+        week_end = week_start + timedelta(days=6)
+        week_workouts = workouts.filter(date__gte=week_start, date__lte=week_end)
+        weekly_data.append({
+            'week': f"Week {i+1}",
+            'minutes': sum(w.duration for w in week_workouts)
+        })
+    
+    # Top exercises
+    exercise_counts = workouts.values('exercise').annotate(count=models.Count('exercise')).order_by('-count')[:3]
+    
+    # Active goals snapshot
+    active_goals = Goal.objects.filter(user=request.user, deadline__gte=today)
+    for goal in active_goals:
+        goal_workouts = workouts.filter(date__gte=goal.start_date, date__lte=goal.deadline)
+        goal.progress = sum(w.duration for w in goal_workouts)
+    
+    return render(request, 'my_app/analytics.html', {
+        'total_minutes': total_minutes,
+        'workout_count': workout_count,
+        'avg_duration': avg_duration,
+        'daily_data': daily_data,
+        'weekly_data': weekly_data,
+        'top_exercises': exercise_counts,
+        'active_goals': active_goals
+    })
+
+
+
 
 @login_required
 def goals(request):
