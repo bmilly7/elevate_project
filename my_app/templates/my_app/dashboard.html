@@ -3,17 +3,28 @@
 {% block content %}
     <h1>Dashboard</h1>
     
+    <h2>Search Exercises</h2>
+    <input type="text" id="exercise-search" placeholder="Type an exercise...">
+    <div id="suggestions" class="suggestions-dropdown"></div>
+    
     <h2>Log a Workout</h2>
-    <form method="post">
+    <form method="post" id="workout-form" class="workout-form">
         {% csrf_token %}
+        {% if form.errors %}
+            <ul class="errorlist">
+                {% for field, errors in form.errors.items %}
+                    {% for error in errors %}
+                        <li>{{ field }}: {{ error }}</li>
+                    {% endfor %}
+                {% endfor %}
+            </ul>
+        {% endif %}
         {{ form.as_p }}
-        <div id="exercise-suggestions"></div>
-        <button type="submit">Log Workout</button>
+        <button type="submit" class="submit-btn">Log Workout</button>
     </form>
     
-    <h2>Recent Workouts</h2>
-    {% if workouts %}
-        <ul>
+    <h2>Your Recent Workouts</h2>
+    <ul>
         {% for workout in workouts %}
             <li class="workout-item">
                 <span class="workout-details">{{ workout.exercise }} - {{ workout.duration }} mins ({{ workout.date }})</span>
@@ -22,30 +33,37 @@
                     <button type="submit" class="delete-btn">Delete</button>
                 </form>
             </li>
+        {% empty %}
+            <li>No workouts yet!</li>
         {% endfor %}
-        </ul>
-    {% else %}
-        <p>No workouts logged yet.</p>
-    {% endif %}
-
+    </ul>
+    
     <script>
-        document.getElementById('id_exercise').addEventListener('input', function() {
+        const searchInput = document.getElementById('exercise-search');
+        const suggestionsDiv = document.getElementById('suggestions');
+        const exerciseField = document.getElementById('id_exercise');
+        searchInput.addEventListener('input', function() {
             const query = this.value;
-            fetch(`/search_exercises/?q=${query}`)
-                .then(response => response.json())
-                .then(data => {
-                    const suggestions = document.getElementById('exercise-suggestions');
-                    suggestions.innerHTML = '';
-                    data.exercises.forEach(ex => {
-                        const option = document.createElement('div');
-                        option.textContent = ex;
-                        option.onclick = () => {
-                            document.getElementById('id_exercise').value = ex;
-                            suggestions.innerHTML = '';
-                        };
-                        suggestions.appendChild(option);
-                    });
-                });
+            if (query.length > 0) {
+                fetch(`/search-exercises/?q=${query}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        suggestionsDiv.innerHTML = '';
+                        data.exercises.forEach(exercise => {
+                            const div = document.createElement('div');
+                            div.textContent = exercise;
+                            div.className = 'suggestion-item';
+                            div.onclick = () => {
+                                exerciseField.value = exercise;
+                                suggestionsDiv.innerHTML = '';
+                            };
+                            suggestionsDiv.appendChild(div);
+                        });
+                    })
+                    .catch(error => console.error('Error:', error));
+            } else {
+                suggestionsDiv.innerHTML = '';
+            }
         });
     </script>
 {% endblock %}
