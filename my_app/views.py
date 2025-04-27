@@ -247,3 +247,16 @@ def search_exercises(request):
     print("Combined exercises:", combined_exercises)  # Debug
     
     return JsonResponse({'exercises': combined_exercises})   
+
+
+
+
+
+
+@login_required
+def delete_workout(request, workout_id):
+    if request.method == 'POST':
+        workout = Workout.objects.get(id=workout_id, user=request.user)
+        workout.delete()
+        return redirect('dashboard')
+    return redirect('dashboard')

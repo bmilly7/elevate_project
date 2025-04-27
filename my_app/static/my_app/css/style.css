@@ -294,3 +294,45 @@ li {
     margin: 5px 0;
     border-radius: 5px;
 }
+
+
+.workout-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+    background-color: #333333;
+    margin: 5px 0;
+    border-radius: 5px;
+}
+
+.workout-details {
+    flex-grow: 1;
+    margin-right: 10px; /* Space between text and button */
+}
+
+.delete-form {
+    display: inline-block;
+}
+
+.delete-btn {
+    padding: 3px 8px; /* Smaller padding */
+    background-color: #ff4d4d;
+    color: #ffffff;
+    text-decoration: none;
+    border-radius: 3px; /* Slightly smaller radius */
+    font-size: 0.8em; /* Smaller font */
+    border: none;
+    cursor: pointer;
+}
+
+.delete-btn:hover {
+    background-color: #cc0000;
+}
+
+
+.errorlist {
+    color: #ff4d4d;
+    font-size: 0.9em;
+    margin: 5px 0;
+}
